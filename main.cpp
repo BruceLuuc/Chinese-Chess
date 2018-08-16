@@ -13,8 +13,6 @@ int main(int argc,char*argv[]){
     QTextCodec::setCodecForTr(QTextCodec::codecForName("GBK"));
     QTextCodec::setCodecForLocale(QTextCodec::codecForName("GBK"));
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
-    //QTextCodec *tc = QTextCodec::codecForCStrings();
-
 
     QApplication app(argc,argv);
     Board board;

@@ -1,16 +1,18 @@
 #include "Board.h"
 #include<QPainter>
 #include<QMouseEvent>
+#define GetRowCol(__row, __col, __id) \
+    int __row = _s[__id]._row;\
+    int __col = _s[__id]._col
 
 Board::Board(QWidget *parent) : QWidget(parent){
     _r=30;//初始化棋子半径，棋盘间隔
     _selectid=-1;
-    _bRedTurn=true;
+    _bRedTurn=true;//红棋先走
     this->resize( QSize( 700, 680 ));//修改默认窗口大小
     //初始化32个棋子 id编号0-31
     for(int i=0;i!=32;++i)
         _s[i].init(i);
-
 }
 
 void Board::paintEvent(QPaintEvent*){
@@ -46,8 +48,8 @@ void Board::paintEvent(QPaintEvent*){
 
 QPoint Board::center(int row,int col){
     QPoint ret;
-    ret.rx()=(col+1)*_r*2;
-    ret.ry()=(row+1)*_r*2;
+    ret.rx()=(col+1)*_r*2;//row col下标从0开始
+    ret.ry()=(row+1)*_r*2;//所以要加上一
     return ret;
 }
 QPoint Board::center(int id){
@@ -84,55 +86,148 @@ bool Board::getRowCol(QPoint pt,int &row,int&col){
         }
     return false;
 }
+int Board::relation(int row1, int col1, int row, int col){
+    return qAbs(row1-row)*10+qAbs(col1-col);
+}
+//row col 是killid的
 bool Board::canMove1(int moveid, int row, int col, int killid){
     //将 走位九宫格之内
     //步长是一个格子
+    GetRowCol(rol1,col1,moveid);
+    int r=relation(rol1,col1,row,col);
+
     if(_s[moveid]._red){
         if(row > 2)
             return false;
     }else if(row < 7)
         return false;
-    if(col < 3) return false;
-    if(col > 5) return false;
+    if(col < 3||col > 5) return false;
 
-    //行列差必然有一个等于0
-    int dr = _s[moveid]._row - row;
-    int dc = _s[moveid]._col - col;
-    int d = abs(dr)*10 + abs(dc); // 12, 21   22   10, 1
-    if(d == 1 || d == 10)
+    if(r == 1 || r == 10)
         return true;
     return false;
 }
 bool Board::canMove2(int moveid, int row, int col, int killid){
+    //士
+    GetRowCol(row1, col1, moveid);
+    int r = relation(row1, col1, row, col);
+    if(r!=11)
+        return false;
     if(_s[moveid]._red){
         if(row > 2)
             return false;
     }else if(row < 7)
         return false;
-    if(col < 3) return false;
-    if(col > 5) return false;
+    if(col < 3||col > 5) return false;
 
-    //行列差必然有一个等于0
-    int dr = _s[moveid]._row - row;
-    int dc = _s[moveid]._col - col;
-    int d = abs(dr)*10 + abs(dc); // 12, 21   22   10, 1
-    if(d==11)
+    return true;
+}
+int Board::getStoneId(int row, int col){
+    for(int i=0; i<32; ++i)
+        if(_s[i]._row == row && _s[i]._col == col && !_s[i]._dead)
+            return i;
+    return -1;
+}
+bool Board::canMove3(int moveid, int row, int col, int killid){
+    //相
+    if(_s[moveid]._red){
+        if(row > 5)
+            return false;
+    }else if(row < 4)
+        return false;
+    GetRowCol(row1, col1, moveid);
+    int r = relation(row1, col1, row, col);
+    if(r != 22) return false;
+
+    int rEye = (row+row1)/2;
+    int cEye = (col+col1)/2;
+    if(getStoneId(rEye, cEye) != -1)
+        return false;
+
+    return true;
+}
+int Board::getStoneCountAtLine(int row1,int col1,int row2,int col2){
+    int ret=0;
+    if(row1!=row2&&col1!=col2)return -1;//行列都不相同
+    if(row1==row2&&col1==col2)return -1;//同一个点
+    if(row1==row2){
+        int min=col1<col2?col1:col2;
+        int max=col1<col2?col2:col1;
+        for(int col=min+1;col!=max;++col)
+            if(getStoneId(row1,col)!=-1)
+                ++ret;
+    }else{
+        int min = row1 < row2 ? row1 : row2;
+        int max = row1 < row2 ? row2 : row1;
+        for(int row = min+1; row<max; ++row)
+            if(getStoneId(row, col1) != -1)
+                ++ret;
+    }
+    return ret;
+}
+bool Board::canMove4(int moveid, int row, int col, int killid){
+    //车
+    GetRowCol(row1, col1, moveid);
+    int ret = getStoneCountAtLine(row1, col1, row, col);
+    if(ret == 0)
         return true;
     return false;
 }
-bool Board::canMove3(int moveid, int row, int col, int killid){
-    return true;
-}
-bool Board::canMove4(int moveid, int row, int col, int killid){
-    return true;
-}
 bool Board::canMove5(int moveid, int row, int col, int killid){
+    //马
+    GetRowCol(row1, col1, moveid);
+    int r = relation(row1, col1, row, col);
+    if(r != 12&&r!=21) return false;
+    if(r==12)
+        if(getStoneId(row1,(col+col1)/2)!=-1)
+            return false;
+    if(r==21)
+        if(getStoneId((row+row1)/2,col1)!=-1)
+            return false;
+
     return true;
 }
+//row col 是killid的
 bool Board::canMove6(int moveid, int row, int col, int killid){
-    return true;
+    //炮
+    GetRowCol(row1, col1, moveid);
+    int ret = getStoneCountAtLine(row, col, row1, col1);
+    if(killid != -1){
+        //如果killid选中了一个棋子
+        //中间只有一个棋子
+        if(ret == 1) return true;
+    }else{
+        //没选棋子 直行走棋 中间相隔0个棋子
+        if(ret == 0) return true;
+    }
+    return false;
+
+
 }
 bool Board::canMove7(int moveid, int row, int col, int killid){
+    //兵
+    GetRowCol(row1, col1, moveid);
+    int r = relation(row1, col1, row, col);
+    if(r != 1 && r != 10) return false;
+
+    if(_s[moveid]._red){
+        if(row1<=4){//没过河之前
+            if(row1>=row)
+                return false;
+        }else{
+            if(row<=4)//过河之后就不能回去了
+                return false;
+        }
+
+    }else{
+        if(row1>=5){
+            if(row1<=row)
+                return false;
+        }else{
+            if(row>=5)
+                return false;
+        }
+    }
     return true;
 }
 bool Board::canMove(int moveid,int row,int col,int killid){
@@ -175,14 +270,13 @@ void Board::mouseReleaseEvent(QMouseEvent*ev){
     int row;
     int col;
     bool bRet=getRowCol(pt,row,col);
-    //点到了棋盘外面
-    if(bRet==false)
-        return;
+
+    if(!bRet)return;//点到了棋盘外面
 
     int i;
     int clickid=-1;
     for(i=0;i!=32;++i)
-        if(_s[i]._row==row&&_s[i]._col==col&&_s[i]._dead==false)
+        if(_s[i]._row==row&&_s[i]._col==col&&!_s[i]._dead)
             break;
     if(i<32)
         clickid=i;//获得点击棋子的编号
