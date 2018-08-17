@@ -27,9 +27,35 @@ void Board::init(bool bRedSide){
     update();
 }
 void Board::paintEvent(QPaintEvent*){
+
+
+
+
+
+    QPainter p(this);
+    p.setRenderHints(QPainter::Antialiasing | QPainter::TextAntialiasing);
+
+    p.save();
+    drawPlate(p);
+    p.restore();
+
+    p.save();
+    drawPlace(p);
+    p.restore();
+
+    p.save();
+    drawInitPosition(p);
+    p.restore();
+
+    p.save();
+    drawStone(p);
+    p.restore();
+
+
+
+
     QPainter painter(this);
     int d=2*_r;//棋盘直径
-
     //绘制棋盘
     for(int i=1;i<=10;++i)
         painter.drawLine(QPoint(d,i*d),QPoint(9*d,i*d));
@@ -57,6 +83,11 @@ void Board::paintEvent(QPaintEvent*){
         drawStone(painter,i);
 }
 
+bool Board::isDead(int id){
+    if(id == -1)return true;
+    return _s[id]._dead;
+}
+
 QPoint Board::center(int row,int col){
     QPoint ret;
     ret.rx()=(col+1)*_r*2;//row col下标从0开始
@@ -66,7 +97,10 @@ QPoint Board::center(int row,int col){
 QPoint Board::center(int id){
     return center(_s[id]._row,_s[id]._col);
 }
-
+void Board::drawStone(QPainter &p){
+    for(int i=0; i<32; i++)
+        drawStone(p, i);
+}
 void Board::drawStone(QPainter&painter,int id){
     if(_s[id]._dead)
         return;

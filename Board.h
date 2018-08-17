@@ -35,6 +35,7 @@ public:
 
     //helpe function
     int getStoneId(int row, int col);
+    bool isDead(int);
 
     //move stone
     void mouseReleaseEvent(QMouseEvent*);//捕获鼠标事件
