@@ -12,15 +12,22 @@ public:
     //gama data
     Stone _s[32];//定义32个棋子
     int _r;//棋子半径
+    bool _bSide;
 
 
     //game status
     int _selectid;
     bool _bRedTurn;//輪流走棋
+    void init(bool);
 
     //draw functions
     void paintEvent(QPaintEvent*);
-    void drawStone(QPainter& ,int);
+    void drawPlate(QPainter&);
+    void drawPlace(QPainter& );
+    void drawInitPosition(QPainter&);
+    void drawInitPosition(QPainter&, int, int);
+    void drawStone(QPainter&);
+    void drawStone(QPainter&,int);
 
     //function for coordinate
     QPoint center(int,int);//棋盘行列对应的像素坐标

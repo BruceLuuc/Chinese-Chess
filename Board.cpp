@@ -8,14 +8,24 @@
 
 Board::Board(QWidget *parent) : QWidget(parent){
     _r=30;//初始化棋子半径，棋盘间隔
-    _selectid=-1;
-    _bRedTurn=true;//红棋先走
     this->resize( QSize( 700, 680 ));//修改默认窗口大小
-    //初始化32个棋子 id编号0-31
-    for(int i=0;i!=32;++i)
-        _s[i].init(i);
+    //setMinimumSize(_r*20+1, _r*22+1);
+    init(false);
 }
+void Board::init(bool bRedSide){
+    //初始化32个棋子 id编号0-31
+    for(int i=0; i!=32; ++i)
+        _s[i].init(i);
 
+    if(bRedSide)
+        for(int i=0; i<32; ++i)
+            _s[i].rotate();
+
+    _selectid = -1;
+    _bRedTurn = true;//红棋先走
+    _bSide = bRedSide;
+    update();
+}
 void Board::paintEvent(QPaintEvent*){
     QPainter painter(this);
     int d=2*_r;//棋盘直径
