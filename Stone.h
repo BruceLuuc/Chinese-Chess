@@ -6,17 +6,18 @@
 class Stone{
 public:
     enum TYPE{JIANG,CHE,PAO,MA,BING,SHI,XIANG};
+    void init(int);
+    void rotate();//行列中心对称旋转
+    QString name();
+
+
     int _id;
     int _row;
     int _col;
-
     TYPE _type;
 
     bool _dead;
     bool _red;
-
-    void init(int);
-    QString getText();
 };
 
 #endif // STONE_H

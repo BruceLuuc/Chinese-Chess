@@ -42,7 +42,7 @@ void Stone::init(int id){
 
 }
 
-QString Stone::getText() {
+QString Stone::name() {
         switch(this->_type){
             case CHE:
                 return "³µ";
@@ -59,5 +59,10 @@ QString Stone::getText() {
             case XIANG:
                 return "Ïà";
             }
-            return "´íÎó";
-    }
+            return "´íÎó";   
+}
+
+void Stone::rotate(){
+    this->_col = 8-this->_col;
+    this->_row = 9-this->_row;
+}

@@ -1,6 +1,7 @@
 #include "Board.h"
 #include<QPainter>
 #include<QMouseEvent>
+#include <QDebug>
 #define GetRowCol(__row, __col, __id) \
     int __row = _s[__id]._row;\
     int __col = _s[__id]._col
@@ -70,7 +71,7 @@ void Board::drawStone(QPainter&painter,int id){
     if(_s[id]._red)
         painter.setPen(Qt::red);
     painter.setFont(QFont("禹卫书法行书繁体",1.1*_r,800));//象棋字体 华文新魏  腾祥范笑歌楷书繁 方正北魏楷书繁体
-    painter.drawText(rect,_s[id].getText(),QTextOption(Qt::AlignCenter));
+    painter.drawText(rect,_s[id].name(),QTextOption(Qt::AlignCenter));
 }
 
 //复杂度高O(N*2)
@@ -90,7 +91,7 @@ int Board::relation(int row1, int col1, int row, int col){
     return qAbs(row1-row)*10+qAbs(col1-col);
 }
 //row col 是killid的
-bool Board::canMove1(int moveid, int row, int col, int killid){
+bool Board::canMoveJiang(int moveid, int row, int col, int killid){
     //将 走位九宫格之内
     //步长是一个格子
     GetRowCol(rol1,col1,moveid);
@@ -107,7 +108,7 @@ bool Board::canMove1(int moveid, int row, int col, int killid){
         return true;
     return false;
 }
-bool Board::canMove2(int moveid, int row, int col, int killid){
+bool Board::canMoveShi(int moveid, int row, int col, int killid){
     //士
     GetRowCol(row1, col1, moveid);
     int r = relation(row1, col1, row, col);
@@ -128,7 +129,7 @@ int Board::getStoneId(int row, int col){
             return i;
     return -1;
 }
-bool Board::canMove3(int moveid, int row, int col, int killid){
+bool Board::canMoveXiang(int moveid, int row, int col, int killid){
     //相
     if(_s[moveid]._red){
         if(row > 5)
@@ -165,7 +166,7 @@ int Board::getStoneCountAtLine(int row1,int col1,int row2,int col2){
     }
     return ret;
 }
-bool Board::canMove4(int moveid, int row, int col, int killid){
+bool Board::canMoveChe(int moveid, int row, int col, int killid){
     //车
     GetRowCol(row1, col1, moveid);
     int ret = getStoneCountAtLine(row1, col1, row, col);
@@ -173,7 +174,7 @@ bool Board::canMove4(int moveid, int row, int col, int killid){
         return true;
     return false;
 }
-bool Board::canMove5(int moveid, int row, int col, int killid){
+bool Board::canMoveMa(int moveid, int row, int col, int killid){
     //马
     GetRowCol(row1, col1, moveid);
     int r = relation(row1, col1, row, col);
@@ -188,7 +189,7 @@ bool Board::canMove5(int moveid, int row, int col, int killid){
     return true;
 }
 //row col 是killid的
-bool Board::canMove6(int moveid, int row, int col, int killid){
+bool Board::canMovePao(int moveid, int row, int col, int killid){
     //炮
     GetRowCol(row1, col1, moveid);
     int ret = getStoneCountAtLine(row, col, row1, col1);
@@ -204,7 +205,7 @@ bool Board::canMove6(int moveid, int row, int col, int killid){
 
 
 }
-bool Board::canMove7(int moveid, int row, int col, int killid){
+bool Board::canMoveBing(int moveid, int row, int col, int killid){
     //兵
     GetRowCol(row1, col1, moveid);
     int r = relation(row1, col1, row, col);
@@ -239,25 +240,25 @@ bool Board::canMove(int moveid,int row,int col,int killid){
     }
     switch (_s[moveid]._type) {
     case Stone::JIANG:
-        return canMove1(moveid, row, col, killid);
+        return canMoveJiang(moveid, row, col, killid);
         break;
     case Stone::SHI:
-        return canMove2(moveid, row, col, killid);
+        return canMoveShi(moveid, row, col, killid);
         break;
     case Stone::XIANG:
-        return canMove3(moveid, row, col, killid);
+        return canMoveXiang(moveid, row, col, killid);
         break;
     case Stone::CHE:
-        return canMove4(moveid, row, col, killid);
+        return canMoveChe(moveid, row, col, killid);
         break;
     case Stone::MA:
-        return canMove5(moveid, row, col, killid);
+        return canMoveMa(moveid, row, col, killid);
         break;
     case Stone::PAO:
-        return canMove6(moveid, row, col, killid);
+        return canMovePao(moveid, row, col, killid);
         break;
     case Stone::BING:
-        return canMove7(moveid, row, col, killid);
+        return canMoveBing(moveid, row, col, killid);
         break;
     }
     return true;
