@@ -214,7 +214,7 @@ bool Board::canMoveJiang(int moveid, int row, int col, int killid){
     if(r != 1 && r != 10) return false;
 
     if(col < 3||col > 5) return false;
-    if(_s[moveid]._red){
+    if(isRed(moveid)){
         if(row > 2)
             return false;
     }else if(row < 7)
@@ -227,7 +227,7 @@ bool Board::canMoveShi(int moveid, int row, int col, int killid){
     int r = relation(row1, col1, row, col);
     if(r!=11)
         return false;
-    if(_s[moveid]._red){
+    if(isRed(moveid)){
         if(row > 2)
             return false;
     }else if(row < 7)
@@ -246,7 +246,7 @@ int Board::getStoneId(int row, int col){
 }
 bool Board::canMoveXiang(int moveid, int row, int col, int killid){
     //相
-    if(_s[moveid]._red){
+    if(isRed(moveid)){
         if(row > 5)
             return false;
     }else if(row < 4)
@@ -327,7 +327,7 @@ bool Board::canMoveBing(int moveid, int row, int col, int killid){
     int r = relation(row1, col1, row, col);
     if(r != 1 && r != 10) return false;
 
-    if(_s[moveid]._red){
+    if(isRed(moveid)){
         if(row1<=4){//没过河之前
             if(row1>=row)
                 return false;
