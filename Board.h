@@ -50,7 +50,9 @@ public:
     virtual void click(int,int,int);//ÈË¹¤ÖÇÄÜ¡î
     void trySelectStone(int id);
     void tryMoveStone(int, int, int);
-     void moveStone(int moveid, int killid, int row, int col);
+    void moveStone(int moveid, int killid, int row, int col);
+    void saveStep(int moveid, int killid, int row, int col, QVector<Step*>& steps);
+
 
     //rule
     bool canMove(int,int,int,int);

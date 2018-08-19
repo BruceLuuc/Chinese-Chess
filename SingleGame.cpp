@@ -11,11 +11,14 @@ void SingleGame::click(int id,int row,int col){
         computerMove();
 }
 
-//1.看看有哪些步骤可以走
+//1.看看有哪些步骤可以走,并存起来
 //2.试着走一下
 //3.评估走的结果
 //4.取最好的结果
 void SingleGame::computerMove(){
+    //第一步
+    QVector<Step*>steps;
+    getAllPossibleMove(steps);
 
 }
 
@@ -28,7 +31,7 @@ void SingleGame::getAllPossibleMove(QVector<Step*>&steps){
                 if(sameColor(killid,i))continue;
                 if(canMove(i,row,col,killid)){
                     //可以走 保存一下
-                    saveStep(i,row,col,killid,steps);
+                    saveStep(i,killid,row,col,steps);
                 }
             }
         }

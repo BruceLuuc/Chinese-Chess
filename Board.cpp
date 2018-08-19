@@ -344,3 +344,16 @@ bool Board::canMoveBing(int moveid, int row, int col, int killid){
     }
     return true;
 }
+
+void Board::saveStep(int moveid, int killid, int row, int col, QVector<Step*>& steps){
+    GetRowCol(row1, col1, moveid);
+    Step* step = new Step;
+    step->_rowFrom = row1;
+    step->_colFrom = col1;
+    step->_colTo = col;
+    step->_rowTo = row;
+    step->_moveid = moveid;
+    step->_killid = killid;
+
+    steps.append(step);
+}
