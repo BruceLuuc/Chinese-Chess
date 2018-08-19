@@ -83,7 +83,7 @@ void Board::drawStone(QPainter&painter,int id){
         painter.setBrush(QBrush(QColor(250,200,100)));
     painter.setPen(Qt::black);
     painter.drawEllipse(center(id),_r,_r);
-    if(_s[id]._red)
+    if(isRed(id))
         painter.setPen(Qt::red);
     painter.setFont(QFont("禹卫书法行书繁体",1.1*_r,800));//象棋字体 华文新魏  腾祥范笑歌楷书繁 方正北魏楷书繁体
     painter.drawText(rect,_s[id].name(),QTextOption(Qt::AlignCenter));
@@ -103,12 +103,12 @@ bool Board::getClickRowCol(QPoint pt,int &row,int&col){
         }
     return false;
 }
-bool Board::red(int id){
+bool Board::isRed(int id){
     return _s[id]._red;
 }
 bool Board::sameColor(int id1, int id2){
     if(id1 == -1 || id2 == -1) return false;
-    return red(id1) == red(id2);
+    return isRed(id1) == isRed(id2);
 }
 bool Board::canSelect(int id){
     return _bRedTurn == _s[id]._red;

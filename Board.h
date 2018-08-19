@@ -36,7 +36,7 @@ public:
     //helpe function
     int getStoneId(int row, int col);
     bool isDead(int);
-    bool red(int id);
+    bool isRed(int id);
     bool sameColor(int id1, int id2);
     void killStone(int id);
     void moveStone(int moveid, int row, int col);
