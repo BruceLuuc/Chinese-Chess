@@ -10,6 +10,7 @@ void SingleGame::click(int id,int row,int col){
     if(!this->_bRedTurn){
         Step*step=getBestMove();
         moveStone(step->_moveid,step->_killid,step->_rowTo,step->_colTo);
+        delete step;
     }
 }
 
@@ -24,14 +25,18 @@ Step* SingleGame::getBestMove(){
     //第2步
     int maxScore=INT_MIN;
     Step* ret=NULL;
-    for(QVector<Step*>::iterator it=steps.begin();it!=steps.end();++it){
-        Step*step=*it;
+    while(steps.count()){
+        Step*step=steps.back();
+        steps.pop_back();
         fakeMove(step);//假走一下
-        int score=calcScore();
+        int score=getMinScore();
         unfakeMove(step);//复原
         if(score>maxScore){
             maxScore=score;
+            if(ret)delete ret;
             ret=step;
+        }else{
+            delete step;
         }
     }
     //第4步
@@ -40,8 +45,14 @@ Step* SingleGame::getBestMove(){
 }
 
 void SingleGame::getAllPossibleMove(QVector<Step*>&steps){
-    //遍历所有黑棋看看走法
-    for(int i=16;i!=32;++i){
+
+    int min=16;
+    int max=32;
+    if(this->_bRedTurn){
+        min=0;
+        max=16;
+    }
+    for(int i=min;i!=max;++i){
         //去掉掉死棋
         if(_s[i]._dead)
             continue;
@@ -103,15 +114,15 @@ int SingleGame::getMaxScore(){
 
 int SingleGame::getMinScore(){
     QVector<Step*>steps;
-    getAllPossibleMove(steps);
+    getAllPossibleMove(steps);//红棋的PossibleMove
     int minScore=INT_MAX;
     while(steps.count()){
         Step*step=steps.back();
         steps.pop_back();
         fakeMove(step);
-        int score=getMinScore();
+        int score=calcScore();
         unfakeMove(step);
-        if(score>minScore)
+        if(score<minScore)
             minScore=score;
         delete step;
     }
