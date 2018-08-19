@@ -4,8 +4,9 @@
 
 class SingleGame:public Board
 {
+    Q_OBJECT
 public:
-    SingleGame(){_level=3;}
+    SingleGame(){_level=4;}
     virtual void click(int,int,int);//ÈË¹¤ÖÇÄÜ¡î
     Step* getBestMove();
     void getAllPossibleMove(QVector<Step*>& steps);
@@ -13,9 +14,11 @@ public:
     void unfakeMove(Step*step);
     int calcScore();
 
-    int getMinScore();
-    int getMaxScore();
+    int getMinScore(int level);
+    int getMaxScore(int level);
     int _level;
+public slots:
+    void computerMove();
 };
 
 #endif // SINGLEGAME_H

@@ -1,19 +1,21 @@
 #include "SingleGame.h"
-
+#include<QTimer>
 
 void SingleGame::click(int id,int row,int col){
 
     if(!this->_bRedTurn)
         return;
     Board::click(id,row,col);
-    //红棋走完 立马走黑棋
-    if(!this->_bRedTurn){
-        Step*step=getBestMove();
-        moveStone(step->_moveid,step->_killid,step->_rowTo,step->_colTo);
-        delete step;
-    }
+    //红棋走完 立马走黑棋  设置个定时器 先刷新完红棋走完的布局  再让电脑慢慢思考
+    if(!this->_bRedTurn)
+        QTimer::singleShot(100,this,SLOT(computerMove()));
 }
-
+void SingleGame::computerMove(){
+    Step*step=getBestMove();
+    moveStone(step->_moveid,step->_killid,step->_rowTo,step->_colTo);
+    delete step;
+    update();
+}
 //1.看看有哪些步骤可以走,并存起来
 //2.试着走一下
 //3.评估走的结果
@@ -29,7 +31,7 @@ Step* SingleGame::getBestMove(){
         Step*step=steps.back();
         steps.pop_back();
         fakeMove(step);//假走一下
-        int score=getMinScore();
+        int score=getMinScore(_level-1);
         unfakeMove(step);//复原
         if(score>maxScore){
             maxScore=score;
@@ -95,7 +97,8 @@ int SingleGame::calcScore(){
 }
 
 
-int SingleGame::getMaxScore(){
+int SingleGame::getMaxScore(int level){
+    if(level==0)return calcScore();
     QVector<Step*>steps;
     getAllPossibleMove(steps);
     int maxScore=INT_MIN;
@@ -103,7 +106,7 @@ int SingleGame::getMaxScore(){
         Step*step=steps.back();
         steps.pop_back();
         fakeMove(step);
-        int score=getMinScore();
+        int score=getMinScore(level-1);
         unfakeMove(step);
         if(score>maxScore)
             maxScore=score;
@@ -112,7 +115,8 @@ int SingleGame::getMaxScore(){
     return maxScore;
 }
 
-int SingleGame::getMinScore(){
+int SingleGame::getMinScore(int level){
+    if(level==0)return calcScore();
     QVector<Step*>steps;
     getAllPossibleMove(steps);//红棋的PossibleMove
     int minScore=INT_MAX;
@@ -120,7 +124,7 @@ int SingleGame::getMinScore(){
         Step*step=steps.back();
         steps.pop_back();
         fakeMove(step);
-        int score=calcScore();
+        int score=getMaxScore(level-1);
         unfakeMove(step);
         if(score<minScore)
             minScore=score;
