@@ -18,3 +18,19 @@ void SingleGame::click(int id,int row,int col){
 void SingleGame::computerMove(){
 
 }
+
+void SingleGame::getAllPossibleMove(QVector<Step*>&steps){
+    //遍历所有黑棋看看走法
+    for(int i=16;i!=32;++i){
+        for(int row=0;row!=10;++row){
+            for(int col=0;col!=9;++col){
+                int killid=this->getStoneId(row,col);
+                if(sameColor(killid,i))continue;
+                if(canMove(i,row,col,killid)){
+                    //可以走 保存一下
+                    saveStep(i,row,col,killid,steps);
+                }
+            }
+        }
+    }
+}
