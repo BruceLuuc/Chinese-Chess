@@ -36,10 +36,19 @@ public:
     //helpe function
     int getStoneId(int row, int col);
     bool isDead(int);
+    bool red(int id);
+    bool sameColor(int id1, int id2);
+    void killStone(int id);
+    void moveStone(int moveid, int row, int col);
 
     //move stone
     void mouseReleaseEvent(QMouseEvent*);//捕获鼠标事件
-    bool getRowCol(QPoint,int&,int&);//得到鼠标点击的行列
+    bool getClickRowCol(QPoint,int&,int&);//得到鼠标点击的行列
+    void click(QPoint);
+    virtual void click(int,int,int);
+    void trySelectStone(int id);
+    void tryMoveStone(int, int, int);
+     void moveStone(int moveid, int killid, int row, int col);
 
     //rule
     bool canMove(int,int,int,int);
@@ -51,6 +60,7 @@ public:
     bool canMoveShi(int,int,int,int);
     bool canMoveXiang(int,int,int,int);
 
+    bool canSelect(int id);
 
     //rule helper
     int relation(int,int,int,int);
