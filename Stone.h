@@ -5,7 +5,7 @@
 //Stone代表一个棋子
 class Stone{
 public:
-    enum TYPE{JIANG,CHE,PAO,MA,BING,SHI,XIANG};
+    enum TYPE{CHE,MA,PAO,BING,JIANG,SHI,XIANG};
     void init(int);
     void rotate();//行列中心对称旋转
     QString name();
