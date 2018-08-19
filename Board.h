@@ -3,6 +3,8 @@
 
 #include <QWidget>
 #include"Stone.h"
+#include "Step.h"
+#include <QVector>
 
 class Board : public QWidget{
     Q_OBJECT

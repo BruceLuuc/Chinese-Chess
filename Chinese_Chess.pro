@@ -1,7 +1,8 @@
 HEADERS += \
     Board.h \
     Stone.h \
-    SingleGame.h
+    SingleGame.h \
+    Step.h
 
 SOURCES += \
     Board.cpp \
