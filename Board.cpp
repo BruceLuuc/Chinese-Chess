@@ -147,6 +147,8 @@ void Board::tryMoveStone(int killid, int row, int col){
         update();
     }
 }
+
+//虚函数 调用子类的click
 void Board::click(int id, int row, int col){
     if(this->_selectid == -1)
         trySelectStone(id);

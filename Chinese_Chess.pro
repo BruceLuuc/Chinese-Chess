@@ -1,11 +1,13 @@
 HEADERS += \
     Board.h \
-    Stone.h
+    Stone.h \
+    SingleGame.h
 
 SOURCES += \
     Board.cpp \
     main.cpp \
-    Stone.cpp
+    Stone.cpp \
+    SingleGame.cpp
 
 QT+=widgets gui
 QT       += core gui

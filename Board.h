@@ -17,7 +17,7 @@ public:
 
     //game status
     int _selectid;
-    bool _bRedTurn;//輪流走棋
+    bool _bRedTurn;//该红棋走了
     void init(bool);
 
     //draw functions
@@ -45,7 +45,7 @@ public:
     void mouseReleaseEvent(QMouseEvent*);//捕获鼠标事件
     bool getClickRowCol(QPoint,int&,int&);//得到鼠标点击的行列
     void click(QPoint);
-    virtual void click(int,int,int);
+    virtual void click(int,int,int);//人工智能☆
     void trySelectStone(int id);
     void tryMoveStone(int, int, int);
      void moveStone(int moveid, int killid, int row, int col);
