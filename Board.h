@@ -41,6 +41,7 @@ public:
     bool isRed(int id);
     bool sameColor(int id1, int id2);
     void killStone(int id);
+    void reliveStone(int id);
     void moveStone(int moveid, int row, int col);
 
     //move stone

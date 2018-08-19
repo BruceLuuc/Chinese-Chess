@@ -357,3 +357,8 @@ void Board::saveStep(int moveid, int killid, int row, int col, QVector<Step*>& s
 
     steps.append(step);
 }
+
+void Board::reliveStone(int id){
+    if(id==-1) return;
+    _s[id]._dead = false;
+}
