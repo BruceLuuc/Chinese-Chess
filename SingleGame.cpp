@@ -31,7 +31,7 @@ Step* SingleGame::getBestMove(){
         Step*step=steps.back();
         steps.pop_back();
         fakeMove(step);//假走一下
-        int score=getMinScore(_level-1);
+        int score=getMinScore(_level-1,maxScore);
         unfakeMove(step);//复原
         if(score>maxScore){
             maxScore=score;
@@ -97,7 +97,7 @@ int SingleGame::calcScore(){
 }
 
 
-int SingleGame::getMaxScore(int level){
+int SingleGame::getMaxScore(int level,int curMinScore){
     if(level==0)return calcScore();
     QVector<Step*>steps;
     getAllPossibleMove(steps);
@@ -106,16 +106,26 @@ int SingleGame::getMaxScore(int level){
         Step*step=steps.back();
         steps.pop_back();
         fakeMove(step);
-        int score=getMinScore(level-1);
+        int score=getMinScore(level-1,maxScore);
         unfakeMove(step);
+        delete step;
+        if(score>=curMinScore){
+            while(steps.count()){
+                Step*step=steps.back();
+                steps.pop_back();
+                delete step;
+            }
+            return score;
+        }
+
         if(score>maxScore)
             maxScore=score;
-        delete step;
+
     }
     return maxScore;
 }
 
-int SingleGame::getMinScore(int level){
+int SingleGame::getMinScore(int level,int curMaxScore){
     if(level==0)return calcScore();
     QVector<Step*>steps;
     getAllPossibleMove(steps);//红棋的PossibleMove
@@ -124,11 +134,20 @@ int SingleGame::getMinScore(int level){
         Step*step=steps.back();
         steps.pop_back();
         fakeMove(step);
-        int score=getMaxScore(level-1);
+        int score=getMaxScore(level-1,minScore);
         unfakeMove(step);
+        delete step;
+        if(score<=curMaxScore){
+            while(steps.count()){
+                Step*step=steps.back();
+                steps.pop_back();
+                delete step;
+            }
+            return score;
+        }
+
         if(score<minScore)
             minScore=score;
-        delete step;
     }
     return minScore;
 }
