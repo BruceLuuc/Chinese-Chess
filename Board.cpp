@@ -167,12 +167,7 @@ void Board::mouseReleaseEvent(QMouseEvent*ev){
 }
 
 bool Board::canMove(int moveid,int row,int col,int killid){
-    if(sameColor(moveid, killid)){
-        //»»Ñ¡Ôñ
-        //_selectid=killid;
-        //update();
-        return false;
-    }
+    if(sameColor(moveid, killid)) return false;
     switch (_s[moveid]._type) {
     case Stone::JIANG:
         return canMoveJiang(moveid, row, col, killid);
