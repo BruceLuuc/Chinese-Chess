@@ -6,7 +6,7 @@ class SingleGame:public Board
 {
     Q_OBJECT
 public:
-    SingleGame(){_level=4;}
+    SingleGame():_level(4){}
     virtual void click(int,int,int);//ÈË¹¤ÖÇÄÜ¡î
     Step* getBestMove();
     void getAllPossibleMove(QVector<Step*>& steps);

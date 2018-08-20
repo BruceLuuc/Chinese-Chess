@@ -9,21 +9,21 @@
 Board::Board(QWidget *parent) : QWidget(parent){
     _r=30;//初始化棋子半径，棋盘间隔
     this->resize( QSize( 700, 680 ));//修改默认窗口大小
-    init(false);
+    init(true);
 }
-void Board::init(bool RedOnTop){
+void Board::init(bool RedOnBottom){
     //初始化32个棋子 id编号0-31
     for(int i=0; i!=32; ++i)
         _s[i].init(i);
 
     //如果红棋不在上方 把红棋放下面 bottom red side
-    if(!RedOnTop)
+    if(RedOnBottom)
         for(int i=0; i<32; ++i)
             _s[i].rotate();
 
     _selectid = -1;
     _bRedTurn = true;//红棋先走
-    topSide = RedOnTop;//上方的不是红棋
+    topSide = !RedOnBottom;//上方的不是红棋
 }
 //是否位于上方 跟初始化有关
 bool Board::isTopSide(int id){
