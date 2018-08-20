@@ -10,8 +10,10 @@ int main(int argc,char*argv[]){
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("GBK"));
 
     QApplication app(argc,argv);
-    SingleGame board;
-    board.setWindowTitle("中国象棋");
-    board.show();
+    Board *board;
+    SingleGame singleGame;
+    board=&singleGame;//虚函数动态联编
+    board->setWindowTitle("中国象棋");
+    board->show();
     return app.exec();
 }
