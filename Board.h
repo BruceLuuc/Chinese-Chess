@@ -14,7 +14,7 @@ public:
     //gama data
     Stone _s[32];//定义32个棋子
     int _r;//棋子半径
-    bool _bSide;
+    bool topSide;
 
 
     //game status
@@ -70,6 +70,7 @@ public:
     //rule helper
     int relation(int,int,int,int);
     int getStoneCountAtLine(int,int,int,int);
+    bool isTopSide(int id);//棋子是否位于上方
 
 signals:
 

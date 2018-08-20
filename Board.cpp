@@ -11,19 +11,25 @@ Board::Board(QWidget *parent) : QWidget(parent){
     this->resize( QSize( 700, 680 ));//修改默认窗口大小
     init(false);
 }
-void Board::init(bool bRedSide){
+void Board::init(bool RedOnTop){
     //初始化32个棋子 id编号0-31
     for(int i=0; i!=32; ++i)
         _s[i].init(i);
 
-    if(bRedSide)
+    //如果红棋不在上方 把红棋放下面 bottom red side
+    if(!RedOnTop)
         for(int i=0; i<32; ++i)
             _s[i].rotate();
 
     _selectid = -1;
     _bRedTurn = true;//红棋先走
-    _bSide = bRedSide;
+    topSide = RedOnTop;//上方的不是红棋
 }
+//是否位于上方 跟初始化有关
+bool Board::isTopSide(int id){
+    return topSide == _s[id]._red;
+}
+
 void Board::paintEvent(QPaintEvent*){
 
     QPainter painter(this);
@@ -211,7 +217,7 @@ bool Board::canMoveJiang(int moveid, int row, int col, int killid){
     if(r != 1 && r != 10) return false;
 
     if(col < 3||col > 5) return false;
-    if(isRed(moveid)){
+    if(isTopSide(moveid)){
         if(row > 2)
             return false;
     }else if(row < 7)
@@ -224,7 +230,7 @@ bool Board::canMoveShi(int moveid, int row, int col, int killid){
     int r = relation(row1, col1, row, col);
     if(r!=11)
         return false;
-    if(isRed(moveid)){
+    if(isTopSide(moveid)){
         if(row > 2)
             return false;
     }else if(row < 7)
@@ -243,7 +249,7 @@ int Board::getStoneId(int row, int col){
 }
 bool Board::canMoveXiang(int moveid, int row, int col, int killid){
     //相
-    if(isRed(moveid)){
+    if(isTopSide(moveid)){
         if(row > 5)
             return false;
     }else if(row < 4)
@@ -324,7 +330,7 @@ bool Board::canMoveBing(int moveid, int row, int col, int killid){
     int r = relation(row1, col1, row, col);
     if(r != 1 && r != 10) return false;
 
-    if(isRed(moveid)){
+    if(isTopSide(moveid)){
         if(row1<=4){//没过河之前
             if(row1>=row)
                 return false;
