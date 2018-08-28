@@ -335,6 +335,8 @@ bool Board::canMoveBing(int moveid, int row, int col, int killid){
             if(row1>=row)
                 return false;
         }else{
+            if(row1>row)
+                return false;
             if(row<=4)//过河之后就不能回去了
                 return false;
         }
@@ -344,6 +346,8 @@ bool Board::canMoveBing(int moveid, int row, int col, int killid){
             if(row1<=row)
                 return false;
         }else{
+            if(row1<row)
+                return false;
             if(row>=5)
                 return false;
         }
