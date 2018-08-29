@@ -24,8 +24,6 @@ public:
 
     //draw functions
     void paintEvent(QPaintEvent*);
-    void drawPlate(QPainter&);
-    void drawPlace(QPainter& );
     void drawInitPosition(QPainter&);
     void drawInitPosition(QPainter&, int, int);
     void drawStone(QPainter&);

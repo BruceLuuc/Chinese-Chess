@@ -44,13 +44,17 @@ void Board::paintEvent(QPaintEvent*){
             painter.drawLine(QPoint(i*d,d),QPoint(i*d,5*d));
             painter.drawLine(QPoint(i*d,6*d),QPoint(i*d,10*d));
         }
-
     //绘制X 九宫格
     painter.drawLine(QPoint(4*d,1*d),QPoint(6*d,3*d));
     painter.drawLine(QPoint(6*d,1*d),QPoint(4*d,3*d));
 
     painter.drawLine(QPoint(4*d,8*d),QPoint(6*d,10*d));
     painter.drawLine(QPoint(6*d,8*d),QPoint(4*d,10*d));
+
+    //绘制十字准星
+    painter.save();
+    drawInitPosition(painter);
+    painter.restore();
 
     //楚河汉界
     painter.setFont(QFont("腾祥范笑歌楷书繁",1.1*_r,800));
@@ -93,6 +97,66 @@ void Board::drawStone(QPainter&painter,int id){
         painter.setPen(Qt::red);
     painter.setFont(QFont("禹卫书法行书繁体",1.1*_r,800));//象棋字体 华文新魏  腾祥范笑歌楷书繁 方正北魏楷书繁体
     painter.drawText(rect,_s[id].name(),QTextOption(Qt::AlignCenter));
+}
+
+void Board::drawInitPosition(QPainter &p){
+    drawInitPosition(p, 3, 0);
+    drawInitPosition(p, 3, 2);
+    drawInitPosition(p, 3, 4);
+    drawInitPosition(p, 3, 6);
+    drawInitPosition(p, 3, 8);
+
+    drawInitPosition(p, 6, 0);
+    drawInitPosition(p, 6, 2);
+    drawInitPosition(p, 6, 4);
+    drawInitPosition(p, 6, 6);
+    drawInitPosition(p, 6, 8);
+
+    drawInitPosition(p, 2, 1);
+    drawInitPosition(p, 2, 7);
+
+    drawInitPosition(p, 7, 1);
+    drawInitPosition(p, 7, 7);
+}
+void Board::drawInitPosition(QPainter &p, int row, int col){
+    QPoint pt = center(row, col);
+    QPoint off = QPoint(_r/6, _r/6);
+    int len = _r/3;
+
+    QPoint ptStart;
+    QPoint ptEnd;
+
+    if(col != 0){
+        /* 左上角 */
+        ptStart = QPoint(pt.x() - off.x(), pt.y() - off.y());
+        ptEnd = ptStart + QPoint(-len, 0);
+        p.drawLine(ptStart, ptEnd);
+        ptEnd = ptStart + QPoint(0, -len);
+        p.drawLine(ptStart, ptEnd);
+
+        /* 左下角 */
+        ptStart = QPoint(pt.x() - off.x(), pt.y() + off.y());
+        ptEnd = ptStart + QPoint(-len, 0);
+        p.drawLine(ptStart, ptEnd);
+        ptEnd = ptStart + QPoint(0, +len);
+        p.drawLine(ptStart, ptEnd);
+    }
+
+    if(col != 8){
+        /* 右下角 */
+        ptStart = QPoint(pt.x() + off.x(), pt.y() + off.y());
+        ptEnd = ptStart + QPoint(+len, 0);
+        p.drawLine(ptStart, ptEnd);
+        ptEnd = ptStart + QPoint(0, +len);
+        p.drawLine(ptStart, ptEnd);
+
+        /* 右上角 */
+        ptStart = QPoint(pt.x() + off.x(), pt.y() - off.y());
+        ptEnd = ptStart + QPoint(+len, 0);
+        p.drawLine(ptStart, ptEnd);
+        ptEnd = ptStart + QPoint(0, -len);
+        p.drawLine(ptStart, ptEnd);
+    }
 }
 
 //复杂度高O(N*2)
