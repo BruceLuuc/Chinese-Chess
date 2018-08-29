@@ -51,13 +51,25 @@ QString Stone::name() {
             case PAO:
                 return "ÅÚ";
             case BING:
+            if(this->_red)
                 return "±ø";
+            else
+                return "×ä";
             case JIANG:
+            if(this->_red)
+                return "Ë§";
+            else
                 return "½«";
             case SHI:
+            if(this->_red)
                 return "Ê¿";
+            else
+                return "ÊË";
             case XIANG:
+            if(this->_red)
                 return "Ïà";
+            else
+                return "Ïó";
             }
             return "´íÎó";   
 }
