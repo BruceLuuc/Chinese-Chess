@@ -16,6 +16,7 @@ public:
 
     int getMinScore(int level,int curMaxScore);
     int getMaxScore(int level,int curMinScore);
+    int AlphaBeta(int level,int preScore);
     int _level;
 public slots:
     void computerMove();

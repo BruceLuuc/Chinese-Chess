@@ -32,6 +32,7 @@ Step* SingleGame::getBestMove(){
         steps.pop_back();
         fakeMove(step);//假走一下
         int score=getMinScore(_level-1,maxScore);
+        //int score=-AlphaBeta(_level-1,-maxScore);
         unfakeMove(step);//复原
         if(score>maxScore){
             maxScore=score;
@@ -136,8 +137,9 @@ int SingleGame::getMinScore(int level,int curMaxScore){
         fakeMove(step);
         int score=getMaxScore(level-1,minScore);
         unfakeMove(step);
-        delete step;
+        delete step;//释放内存
         if(score<=curMaxScore){
+            //释放被剪枝的内存
             while(steps.count()){
                 Step*step=steps.back();
                 steps.pop_back();
@@ -150,4 +152,31 @@ int SingleGame::getMinScore(int level,int curMaxScore){
             minScore=score;
     }
     return minScore;
+}
+//测试AlphaBeta剪枝
+int SingleGame::AlphaBeta(int level,int preScore){
+    if(level==0)return calcScore();
+    QVector<Step*>steps;
+    getAllPossibleMove(steps);
+    int maxScore=INT_MIN;
+    while(steps.count()){
+        Step*step=steps.back();
+        steps.pop_back();
+        fakeMove(step);
+        int score=-AlphaBeta(level-1,-maxScore);
+        unfakeMove(step);
+        delete step;
+        if(score>=preScore){
+            while(steps.count()){
+                Step*step=steps.back();
+                steps.pop_back();
+                delete step;
+            }
+            return score;
+        }
+
+        if(score>maxScore)
+            maxScore=score;
+    }
+    return maxScore;
 }
