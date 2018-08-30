@@ -31,8 +31,8 @@ Step* SingleGame::getBestMove(){
         Step*step=steps.back();
         steps.pop_back();
         fakeMove(step);//假走一下
-        int score=getMinScore(_level-1,maxScore);
-        //int score=-AlphaBeta(_level-1,-maxScore);
+        //int score=getMinScore(_level-1,maxScore);
+        int score=-AlphaBeta(_level-1,-maxScore);
         unfakeMove(step);//复原
         if(score>maxScore){
             maxScore=score;
@@ -166,7 +166,7 @@ int SingleGame::AlphaBeta(int level,int preScore){
         int score=-AlphaBeta(level-1,-maxScore);
         unfakeMove(step);
         delete step;
-        if(score>=preScore){
+        if(score<=preScore){
             while(steps.count()){
                 Step*step=steps.back();
                 steps.pop_back();
